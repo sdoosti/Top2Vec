@@ -135,7 +135,7 @@ if __file__ == '__main__':
     print('Done!')
     # save the processed text data
     print('Saving the processed text data...')
-    with open('processed_text__{today_str}.txt','w') as f:
+    with open(os.path.join(DATA_PATH,'processed_text__{today_str}.txt'),'w') as f:
         for doc in processed_docs:
             #f.write(' '.join(doc)+'\n')
             f.write(','.join(filter(lambda x: x not in ['',' ','[]','[ ]'],doc))+'\n')
