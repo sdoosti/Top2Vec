@@ -103,10 +103,10 @@ def preprocessing(text, nlp):
     return tokens
 
 
-if __file__ == '__main__':
+if __name__ == '__main__':
     # load the data
     print('Loading the data...', end=' ')
-    data = load_data('data.csv')
+    data = load_data('data_all_text.csv')
     print('Done!')
     # get the text data
     print('Getting the text data...',end=' ')
