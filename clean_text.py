@@ -49,14 +49,15 @@ def get_text(data, cols=['text','topics']):
     list of str, text data
     """
     if len(cols)==1:
-        return data.fillna('')[cols].lower().values.tolist()
+        return data.fillna('')[cols].str.lower().values.tolist()
     else:
         # modifying the topics column (assuming it is a list of topics with ";" delimiter)
-        topics = data[cols[1]].fillna('').lower().values.tolist()
-        topics = ["topics are "+" ".join(topic.split(';')) for topic in topics if topic != '']
-        # merging topics column with text column
-        docs = data[cols[0]].fillna('').lower().values.tolist()
-        return [doc + ' ' + topic for doc,topic in zip(docs,topics)]
+        topics = data[cols[1]].fillna('').str.lower().values.tolist()
+        # add "topics are" to the beginning of each topic if the topic is not empty
+        topics = [topic if topic=='' else 'topics are '+" ".join(topic.split(';')) for topic in topics]
+        # merging topics and description column with text column
+        docs = data[cols[0]].fillna('').str.lower().values.tolist()
+        return [doc + ' ' + topic  for doc,topic in zip(docs,topics)]
 
 def soft_clean(docs):
     """
