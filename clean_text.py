@@ -69,8 +69,10 @@ def soft_clean(docs):
     Returns:
     list of str, cleaned documents
     """
+    processed_docs = [x.strip() for x in docs]
+
     # Remove new line characters
-    processed_docs = [re.sub('\s+', ' ', sent) for sent in docs]
+    processed_docs = [re.sub('\s+', ' ', sent) for sent in processed_docs]
                 
     # Remove 's
     processed_docs = [re.sub("(\'s)","",sent) for sent in processed_docs]
@@ -78,83 +80,59 @@ def soft_clean(docs):
     # Remove distracting single quotes
     processed_docs = [re.sub("\'", "", sent) for sent in processed_docs]
 
-    # Remove extended stop words
-    data = [' '.join([w for w in sent.split() if not w.lower() in exstopwords]) for sent in data]
+    return processed_docs
 
-    docs = [x.strip() for x in data] 
-    doc_ids = pooled.video_id.tolist()  
+nlp = spacy.load('en_core_web_trf') 
 
-    # combined stopwords
-    swlist = list(STOP_WORDS)
-    swlist.extend(extended_stopwords)
-    swlist.extend(stopwords.words('english'))
-    STOP_WORDS = set(swlist)
-    
-    return docs
-
-
-
-
-print('Loading ...')         
-
-
-
-print('Basic cleaning ...')         
-data = pooled.text.values.tolist()
-
-# not removing emails, hashtags, and urls as they will be removed anyway
-# unless they are important
-
-# Remove new line characters
-data = [re.sub('\s+', ' ', sent) for sent in data]
-               
-# Remove 's
-data = [re.sub("(\'s)","",sent) for sent in data]
-               
-# Remove distracting single quotes
-data = [re.sub("\'", "", sent) for sent in data]
-
-# Remove extended stop words
-exstopwords = set(extended_stopwords)
-data = [' '.join([w for w in sent.split() if not w.lower() in exstopwords]) for sent in data]
-
-docs = [x.strip() for x in data] 
-doc_ids = pooled.video_id.tolist()  
-
-# combined stopwords
-swlist = list(STOP_WORDS)
-swlist.extend(extended_stopwords)
-swlist.extend(stopwords.words('english'))
-STOP_WORDS = set(swlist)
-
-nlp = spacy.load('en')        
-
-print('Processing ...')         
-processed_docs = []    
-for doc in nlp.pipe(docs, n_threads=8, batch_size=100):
+def preprocessing(text, nlp):
     # Process document using Spacy NLP pipeline.
-    
+    doc = nlp(text)
     ents = doc.ents  # Named entities.
 
     # Keep only words (no numbers, no punctuation).
     # Lemmatize tokens, remove punctuation and remove stopwords.
-    doc = [token.lemma_.lower().strip() for token in doc if token.is_alpha and not token.is_stop  and token.lemma_ != '-PRON-']
-
-    # Remove common words from a stopword list.
-    doc = [token for token in doc if token not in STOP_WORDS]
+    tokens = [token.lemma_.lower().strip() for token in doc if token.is_alpha and not token.is_stop and token.lemma_ != '-PRON-' and not token.is_punct]
 
     # Add named entities, but only if they are a compound of more than word.
-    doc.extend([str(entity) for entity in ents if len(entity) > 1])
+    #tokens.extend([str(entity) for entity in ents if len(entity) > 1])
     
-    processed_docs.append(doc)
-    
-docs = processed_docs.copy()
-#del processed_docs
+    return tokens
 
-print('Saving the text ...')         
-with open('/homes/shahryar/Desktop/Tubular/top_creators/processed_docs_jan202019.txt','w') as f:    
-    for doc in docs:
-        f.write(','.join(filter(lambda x: x not in ['',' ','[]','[ ]'],doc))+'\n')
+
+if __file__ == '__main__':
+    # load the data
+    print('Loading the data...', end=' ')
+    data = load_data('data.csv')
+    print('Done!')
+    # get the text data
+    print('Getting the text data...',end=' ')
+    docs = get_text(data)
+    print('Done!')
+    # soft clean the text data
+    print('Soft cleaning the text data...',end=' ')
+    docs = soft_clean(docs)
+    print('Done!')
+    # preprocess the text data
+    print(f"Preprocessing the text data using Spacy NLP pipeline ({len(docs)} documents)...",end=' ')
+    #processed_docs = [preprocessing(doc, nlp) for doc in docs]
+    processed_docs = []    
+    for doc in nlp.pipe(docs):
         
+        #ents = doc.ents  # Named entities.
 
-print('Cleaning Process Completed!')
+        # Keep only words (no numbers, no punctuation).
+        # Lemmatize tokens, remove punctuation and remove stopwords.
+        doc = [token.lemma_.lower().strip() for token in doc if token.is_alpha and not token.is_stop and token.lemma_ != '-PRON-' and not token.is_punct]
+
+        # Add named entities, but only if they are a compound of more than word.
+        #doc.extend([str(entity) for entity in ents if len(entity) > 1])
+        
+        processed_docs.append(doc)    
+    print('Done!')
+    # save the processed text data
+    print('Saving the processed text data...')
+    with open('processed_text.txt','w') as f:
+        for doc in processed_docs:
+            #f.write(' '.join(doc)+'\n')
+            f.write(','.join(filter(lambda x: x not in ['',' ','[]','[ ]'],doc))+'\n')
+    print('Text data is saved in processed_text.txt')
