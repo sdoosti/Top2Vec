@@ -24,17 +24,17 @@ def get_args():
     Get the command line arguments
     """
     parser = argparse.ArgumentParser(description='Train the top2vec topic models')
-    parser.add_argument('-f','--file', help='Text data', default=os.path.join(DATA_PATH,"processed_text_jun202024.txt"))
+    parser.add_argument('-f','--file', help='Text data', default=os.path.join(DATA_PATH,"processed_text_2024-06-20.txt"))
     parser.add_argument('-e','--embedding', help='Embedding model', default='doc2vec')
     parser.add_argument('-s','--speed', help='Speed of the model', default='learn')
     parser.add_argument('-o','--output', help='The file to write the model', default=os.path.join(DATA_PATH,f'top2vec_{today_str}.model'))
     args = parser.parse_args()
+    return args
 
 def check_args(args):
     """
     Check the command line arguments
     """
-    assert os.path.exists(args.file), 'File does not exist'
     assert args.embedding in ['doc2vec','universal-sentence-encoder', 'distiluse-base-multilingual-cased-v2', 'distilbert-base-nli-mean-tokens'], 'Embedding model should be either doc2vec, universal-sentence-encoder, distiluse-base-multilingual-cased-v2 or distilbert-base-nli-mean-tokens'
     assert args.speed in ['fast-learn', 'learn', 'deep-learn'], 'Speed should be either fast-learn, learn or deep-learn'
     assert args.output.endswith('.model'), 'Output file should be a .model file'
@@ -66,6 +66,7 @@ def load_data(filename):
     logging.info(f"Data is loaded from {filename}")
     logging.info(f"Number of documents: {len(processed_docs)}")
     #docs = [" ".join(x) for x in processed_docs if len(x) > 5]
+    docs = [" ".join(x) for x in processed_docs]
     return docs
 
 def save_model(model, filename):
@@ -106,3 +107,6 @@ def main():
     logging.info('Model is trained.')
     save_model(model, args.output)
     logging.info('Model is saved.')
+
+if __name__ == '__main__':
+    main() 
