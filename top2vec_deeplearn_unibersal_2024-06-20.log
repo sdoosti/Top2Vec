@@ -28,3 +28,8 @@
 2024-06-20 23:42:32,177 - INFO - Downloaded TF-Hub Module 'https://tfhub.dev/google/universal-sentence-encoder/4'.
 2024-06-20 23:42:44,426 - INFO - Fingerprint not found. Saved model loading will continue.
 2024-06-20 23:42:44,429 - INFO - Creating joint document/word embedding
+2024-06-20 23:49:13,711 - INFO - Creating lower dimension embedding of documents
+2024-06-21 00:04:50,824 - INFO - Finding dense areas of documents
+2024-06-21 00:06:21,441 - INFO - Finding topics
+2024-06-21 00:07:08,573 - INFO - Model is trained.
+2024-06-21 00:07:42,186 - INFO - Model is saved.
