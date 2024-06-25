@@ -89,7 +89,7 @@ def main():
     print_model_setup(args)
     
     # Start the logging file
-    logging.basicConfig(filename=f'top2vec_{today_str}.log', level=logging.INFO,
+    logging.basicConfig(filename=args.output.replace("model","log"), level=logging.INFO,
                         format='%(asctime)s - %(levelname)s - %(message)s')
     
     # log the model setup
