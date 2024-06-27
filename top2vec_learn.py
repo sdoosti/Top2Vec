@@ -35,7 +35,14 @@ def check_args(args):
     """
     Check the command line arguments
     """
-    assert args.embedding in ['doc2vec','universal-sentence-encoder', 'distiluse-base-multilingual-cased-v2', 'distilbert-base-nli-mean-tokens'], 'Embedding model should be either doc2vec, universal-sentence-encoder, distiluse-base-multilingual-cased-v2 or distilbert-base-nli-mean-tokens'
+    embeding_models = ["doc2vec",
+                       "universal-sentence-encoder",
+                       "universal-sentence-encoder-multilingual",
+                       "universal-sentence-encoder-multilingual-large",
+                       "distiluse-base-multilingual-cased",
+                       "all-MiniLM-L6-v2",
+                       "paraphrase-multilingual-MiniLM-L12-v2"]
+    assert args.embedding in embeding_models, 'Embedding model should be one of the following: doc2vec, universal-sentence-encoder, universal-sentence-encoder-multilingual, universal-sentence-encoder-multilingual-large, distiluse-base-multilingual-cased, all-MiniLM-L6-v2, paraphrase-multilingual-MiniLM-L12-v2'
     assert args.speed in ['fast-learn', 'learn', 'deep-learn'], 'Speed should be either fast-learn, learn or deep-learn'
     assert args.output.endswith('.model'), 'Output file should be a .model file'
 
