@@ -27,8 +27,8 @@ logging.basicConfig(filename=OUTPUT.replace("model","log"), level=logging.INFO,
 model = Top2Vec.load(model_path)
 logging.info('Model is loaded.')
 
-logging.info('Reducing the number of topics to 20.')
-hierarchy = model.hierarchical_topic_reduction(20)
+logging.info('Reducing the number of topics to 100.')
+hierarchy = model.hierarchical_topic_reduction(100)
 logging.info('Hierarchy is created.')
 
 # saving model
