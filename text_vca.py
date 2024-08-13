@@ -118,3 +118,6 @@ if __name__ == '__main__':
         for doc in docs:
             f.write(doc+'\n')
     print(f'Text data is saved in {output}')
+    # save the combined data
+    print('Saving the combined data...')
+    combined.to_csv(os.path.join(DATA_PATH,f'vca_combined_{today_str}.csv'),index=False)
