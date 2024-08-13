@@ -3,7 +3,6 @@ This file constructs the text data that includes sponsor description and video l
 
 Sponsors (from a separate file):
     - description (creator level, not video level)
-    (from videos_sponsors.csv)
 
 Sponsored videos content:
     - video title
