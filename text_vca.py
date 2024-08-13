@@ -11,6 +11,7 @@ import os, re
 from nltk.corpus import stopwords
 from collections import Counter
 import datetime
+import numpy as np
 
 today = datetime.date.today()
 today_str = today.strftime('%Y-%m-%d')
@@ -102,9 +103,10 @@ if __name__ == '__main__':
     print('Done!')
     # get the text data
     print('Getting the text data...',end=' ')
-    combined = combine_text(sponsor_info[['sponsor_id',"description"]],sponsored_videos[["new_id","text"]])
+    combined = combine_text(sponsor_info[['sponsor_id',"text"]],sponsored_videos[["new_id","text"]])
     docs = combined['text'].tolist()
     print('Done!')
+    print(f'Total number of documents: {len(docs)}')
     # soft clean the text data
     print('Soft cleaning the text data...',end=' ')
     docs = soft_clean(docs)
